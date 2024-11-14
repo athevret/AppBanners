@@ -9,19 +9,20 @@ import XCTest
 import AppBannersMacros
 
 let testMacros: [String: Macro.Type] = [
-    "stringify": StringifyMacro.self,
+    "banner": BannerMacro.self,
+    "bannerAsync": BannerAsyncMacro.self,
 ]
 #endif
 
 final class AppBannersTests: XCTestCase {
-    func testMacro() throws {
+    func testBannerMacro() throws {
         #if canImport(AppBannersMacros)
         assertMacroExpansion(
             """
-            #stringify(a + b)
+            #banner(.success(title: "Title", message: "Message"))
             """,
             expandedSource: """
-            (a + b, "a + b")
+            BannerService.shared.addBanner(banner: .success(title: "Title", message: "Message"))
             """,
             macros: testMacros
         )
@@ -30,15 +31,28 @@ final class AppBannersTests: XCTestCase {
         #endif
     }
 
-    func testMacroWithStringLiteral() throws {
+    func testBannerAsyncMacro() throws {
         #if canImport(AppBannersMacros)
         assertMacroExpansion(
-            #"""
-            #stringify("Hello, \(name)")
-            """#,
-            expandedSource: #"""
-            ("Hello, \(name)", #""Hello, \(name)""#)
-            """#,
+            """
+            #bannerAsync(
+                .success(
+                    title: "Title",
+                    message: "Message"
+                )
+            )
+            """,
+            expandedSource: """
+                _ = Task {
+                    await BannerService.shared.addBanner(
+                        banner:
+                    .success(
+                        title: "Title",
+                        message: "Message"
+                    )
+                    )
+                }
+                """,
             macros: testMacros
         )
         #else

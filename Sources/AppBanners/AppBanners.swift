@@ -1,11 +1,24 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 
-/// A macro that produces both a value and a string containing the
-/// source code that generated the value. For example,
+/// A macro that produces a banner. For example,
 ///
-///     #stringify(x + y)
+///     #banner(.success(message: "message"))
 ///
-/// produces a tuple `(x + y, "x + y")`.
+/// produces `BannerService.shared.addBanner(banner: .success(message: "message"))`.
 @freestanding(expression)
-public macro stringify<T>(_ value: T) -> (T, String) = #externalMacro(module: "AppBannersMacros", type: "StringifyMacro")
+public macro banner(_ value: BannerType) = #externalMacro(module: "AppBannersMacros", type: "BannerMacro")
+
+/// A macro that produces a banner in async context. For example,
+///
+///     #bannerAsync(.success(message: "message"))
+///
+/// produces:
+///   `Task {`
+///   `  await BannerService.shared.addBanner(
+///   `    banner: .success(message: "message")`
+///   `  )`
+///   `}`
+///
+@freestanding(expression)
+public macro bannerAsync(_ value: BannerType) = #externalMacro(module: "AppBannersMacros", type: "BannerAsyncMacro")

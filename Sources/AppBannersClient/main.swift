@@ -1,8 +1,16 @@
 import AppBanners
 
-let a = 17
-let b = 25
+final class AppBannersExample {
+    @MainActor public func example() {
+        #banner(.success(title: "Title", message: "Message"))
+    }
 
-let (result, code) = #stringify(a + b)
-
-print("The value \(result) was produced by the code \"\(code)\"")
+    public func asyncExample() {
+        #bannerAsync(
+            .success(
+                title: "Title",
+                message: "Message"
+            )
+        )
+    }
+}
