@@ -13,10 +13,10 @@ let package = Package(
             name: "AppBanners",
             targets: ["AppBanners"]
         ),
-        .executable(
-            name: "AppBannersClient",
-            targets: ["AppBannersClient"]
-        ),
+//        .executable(
+//            name: "AppBannersClient",
+//            targets: ["AppBannersClient"]
+//        ),
     ],
     dependencies: [
         .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "600.0.0-latest"),
@@ -29,9 +29,12 @@ let package = Package(
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
             ]
         ),
-        .target(name: "AppBanners", dependencies: ["AppBannersMacros"]),
+        .target(
+            name: "AppBanners",
+            dependencies: ["AppBannersMacros"]
+        ),
         // A client of the library, which is able to use the macro in its own code.
-        .executableTarget(name: "AppBannersClient", dependencies: ["AppBanners"]),
+//        .executableTarget(name: "AppBannersClient", dependencies: ["AppBanners"]),
         .testTarget(
             name: "AppBannersTests",
             dependencies: [
