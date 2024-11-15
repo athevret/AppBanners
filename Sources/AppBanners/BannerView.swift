@@ -9,12 +9,18 @@
 
 import SwiftUI
 
-struct BannersView: View {
+@available(iOS 17.0, *)
+@available(macOS 15.0, *)
+public struct BannersView: View {
     @State private var bannerService = BannerService.shared
     @State private var showAllText: Bool = false
 
     let maxDragOffsetHeight: CGFloat = -50.0
-    var body: some View {
+
+    public init() {
+    }
+
+    public var body: some View {
         VStack(alignment: .center) {
             withAnimation(bannerService.animation) {
                 ForEach(bannerService.banners) { banner in
@@ -133,6 +139,9 @@ struct BannersView: View {
     }
 }
 
+#if DEBUG
+@available(iOS 17.0, *)
+@available(macOS 15.0, *)
 struct BannerView_Previews: PreviewProvider {
     @State static private var bannerService = BannerService.shared
 
@@ -149,3 +158,4 @@ struct BannerView_Previews: PreviewProvider {
         }
     }
 }
+#endif

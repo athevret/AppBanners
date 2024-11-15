@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+@available(iOS 17.0, *)
+@available(macOS 15.0, *)
 public struct BannerViewModifier: ViewModifier {
     @State private var bannerService = BannerService.shared
     @Binding var isPresented: Bool
@@ -26,6 +28,8 @@ public struct BannerViewModifier: ViewModifier {
 }
 
 extension View {
+    @available(iOS 17.0, *)
+    @available(macOS 15.0, *)
     public func banner(
         isPresented: Binding<Bool>,
         banner: BannerType
@@ -36,40 +40,47 @@ extension View {
     }
 }
 
-#Preview {
-    @Previewable @State var isErrorPresented: Bool = false
-    @Previewable @State var isWarningPresented: Bool = false
-    @Previewable @State var isSuccessPresented: Bool = false
-    @Previewable @State var bannerService = BannerService()
+#if DEBUG
+@available(iOS 17.0, *)
+@available(macOS 15.0, *)
+struct BannerViewModifier_Previews: PreviewProvider {
+    @State static var isErrorPresented: Bool = false
+    @State static var isWarningPresented: Bool = false
+    @State static var isSuccessPresented: Bool = false
+    @State static var bannerService = BannerService()
 
-    ZStack {
-        VStack {
-            Button {
-                isErrorPresented = true
-            } label: {
-                Text("Error Banner")
-            }.padding()
+    static var previews: some View {
 
-            Button {
-                isWarningPresented = true
-            } label: {
-                Text("Warning Banner")
-            }.padding()
+        ZStack {
+            VStack {
+                Button {
+                    isErrorPresented = true
+                } label: {
+                    Text("Error Banner")
+                }.padding()
 
-            Button {
-                isSuccessPresented = true
-            } label: {
-                Text("Success Banner")
-            }.padding()
+                Button {
+                    isWarningPresented = true
+                } label: {
+                    Text("Warning Banner")
+                }.padding()
+
+                Button {
+                    isSuccessPresented = true
+                } label: {
+                    Text("Success Banner")
+                }.padding()
+            }
+            .banner(isPresented: $isErrorPresented,
+                    banner: .error(title: "Error Title", message: "Error Message"))
+            .banner(isPresented: $isWarningPresented,
+                    banner: .warning(title: "Warning Title", message: "Warning Message"))
+            .banner(isPresented: $isSuccessPresented,
+                    banner: .success(title: "Success Title", message: "Success Message"))
+
+            BannersView()
         }
-        .banner(isPresented: $isErrorPresented,
-                banner: .error(title: "Error Title", message: "Error Message"))
-        .banner(isPresented: $isWarningPresented,
-                banner: .warning(title: "Warning Title", message: "Warning Message"))
-        .banner(isPresented: $isSuccessPresented,
-                banner: .success(title: "Success Title", message: "Success Message"))
-
-        BannersView()
+        .environment(bannerService)
     }
-    .environment(bannerService)
 }
+#endif

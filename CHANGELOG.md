@@ -1,4 +1,8 @@
-# AppBanners 0.1
+# AppBanners 0.2.0
+
+- Fixed compatibility issues found during first integration.
+
+# AppBanners 0.1.0
 
 - Created by Dallin Jared on 3/24/23.
     https://dallinjared.medium.com/swiftui-tutorial-creating-an-in-app-banner-notification-system-97597d64f514

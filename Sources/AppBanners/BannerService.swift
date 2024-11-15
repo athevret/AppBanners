@@ -11,6 +11,8 @@ import Foundation
 import SwiftUI
 import Observation
 
+@available(iOS 17.0, *)
+@available(macOS 15.0, *)
 @MainActor
 @Observable
 public class BannerService {
@@ -50,6 +52,8 @@ public class BannerService {
     }
 }
 
+@available(iOS 17.0, *)
+@available(macOS 15.0, *)
 @Observable
 public final class Banner: NSObject, Identifiable {
     public var id: BannerType { bannerType }

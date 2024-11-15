@@ -10,7 +10,7 @@
 import Foundation
 import SwiftUI
 
-public enum BannerType {
+public enum BannerType: Sendable {
     var id: Self { self }
     case success(
         title: String? = nil,
