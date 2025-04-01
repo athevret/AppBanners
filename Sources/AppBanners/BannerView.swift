@@ -9,17 +9,43 @@
 
 import SwiftUI
 
+/// A view that displays and manages a stack of banner notifications.
+///
+/// This view provides:
+/// - Animated banner presentation and dismissal
+/// - Gesture-based dismissal with drag interactions
+/// - Automatic dismissal for non-persistent banners
+/// - Expandable text for long messages
+/// - Localization support for banner content
+///
+/// Usage Example:
+/// ```swift
+/// struct ContentView: View {
+///     var body: some View {
+///         ZStack {
+///             MainContent()
+///             BannersView()
+///         }
+///     }
+/// }
+/// ```
 @available(iOS 17.0, *)
 @available(macOS 15.0, *)
 public struct BannersView: View {
+    /// The shared service managing banner state and lifecycle.
     @State private var bannerService = BannerService.shared
+    
+    /// Controls whether the banner text is fully expanded.
     @State private var showAllText: Bool = false
 
+    /// The maximum height for drag-based dismissal gesture.
     let maxDragOffsetHeight: CGFloat = -50.0
 
+    /// Creates a new banner view.
     public init() {
     }
 
+    /// The main view body displaying a stack of banner notifications.
     public var body: some View {
         VStack(alignment: .center) {
             withAnimation(bannerService.animation) {
@@ -39,6 +65,13 @@ public struct BannersView: View {
                         }
                     )
                     .onAppear {
+                        // Create haptic effect depending on banner type
+                        switch banner.bannerType {
+                        case .warning: triggerWarningHaptic()
+                        case .error: triggerErrorHaptic()
+                        default: break
+                        }
+                        // Defer banner removal if not persistent
                         guard !banner.bannerType.isPersistent else { return }
                         bannerService.removeBannerDelayed(banner: banner)
                     }
@@ -68,7 +101,30 @@ public struct BannersView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding(.horizontal)
     }
+    
+    /// Create an haptic feedback for error banner
+    private func triggerErrorHaptic() {
+        let feedbackGenerator = UINotificationFeedbackGenerator()
+        feedbackGenerator.notificationOccurred(.error)
+    }
 
+    /// Create an haptic feedback for warning banner
+    private func triggerWarningHaptic() {
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+        feedbackGenerator.impactOccurred()
+    }
+
+    /// Creates a view for an individual banner notification.
+    ///
+    /// This view includes:
+    /// - An icon representing the banner type
+    /// - Title and message text with dynamic font sizing
+    /// - Expandable text for long messages
+    /// - A close button for persistent banners
+    /// - Gesture support for expanding/collapsing long text
+    ///
+    /// - Parameter banner: The banner model to display
+    /// - Returns: A configured view for the banner
     @ViewBuilder
     private func bannerView(banner: Banner) -> some View {
         // swiftlint:disable:previous function_body_length
