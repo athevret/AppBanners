@@ -1,3 +1,8 @@
+# AppBanners 0.3
+
+- Added inline comments (with Cursor AI).
+- Added haptic feedback for error and warning banners.
+
 # AppBanners 0.2.0
 
 - Fixed compatibility issues found during first integration.

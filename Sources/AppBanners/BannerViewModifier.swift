@@ -7,13 +7,45 @@
 
 import SwiftUI
 
+/// A view modifier that adds banner notification functionality to any view.
+///
+/// This modifier enables views to present banner notifications by:
+/// - Binding to a presentation state
+/// - Managing banner lifecycle through the shared BannerService
+/// - Automatically resetting presentation state after showing
+///
+/// Usage Example:
+/// ```swift
+/// struct ContentView: View {
+///     @State private var showBanner = false
+///
+///     var body: some View {
+///         Button("Show Error") {
+///             showBanner = true
+///         }
+///         .banner(
+///             isPresented: $showBanner,
+///             banner: .error(title: "Error", message: "Something went wrong")
+///         )
+///     }
+/// }
+/// ```
 @available(iOS 17.0, *)
 @available(macOS 15.0, *)
 public struct BannerViewModifier: ViewModifier {
+    /// The shared service managing banner state and lifecycle.
     @State private var bannerService = BannerService.shared
+    
+    /// Binding to control the presentation state of the banner.
     @Binding var isPresented: Bool
+    
+    /// The type of banner to be displayed.
     let banner: BannerType
 
+    /// Modifies the view to include banner presentation capabilities.
+    ///
+    /// - Parameter content: The content view being modified
+    /// - Returns: A view with banner presentation functionality
     public func body(content: Content) -> some View {
         ZStack(alignment: .trailing) {
             content
@@ -28,6 +60,16 @@ public struct BannerViewModifier: ViewModifier {
 }
 
 extension View {
+    /// Adds a banner presentation capability to a view.
+    ///
+    /// This modifier allows any view to present banner notifications by providing:
+    /// - A binding to control the presentation state
+    /// - The type of banner to display
+    ///
+    /// - Parameters:
+    ///   - isPresented: A binding to a Boolean value that determines whether to show the banner
+    ///   - banner: The type of banner to display when `isPresented` becomes true
+    /// - Returns: A view that can present the specified banner
     @available(iOS 17.0, *)
     @available(macOS 15.0, *)
     public func banner(
